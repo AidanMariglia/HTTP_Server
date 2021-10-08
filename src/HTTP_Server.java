@@ -13,17 +13,20 @@ public class HTTP_Server {
         final ServerSocket server = new ServerSocket(8080);
         System.out.println("Listening for connections on port 8080....");
 
-        Socket clientSocket = server.accept();
-        InputStreamReader isr = new InputStreamReader(clientSocket.getInputStream());
-        BufferedReader reader = new BufferedReader(isr);
-        String line = reader.readLine();
+        while(true) {
+            try (Socket clientSocket = server.accept()) {
+                InputStreamReader isr = new InputStreamReader(clientSocket.getInputStream());
+                BufferedReader reader = new BufferedReader(isr);
+                String line = reader.readLine();
 
-        Date today = new Date();
-        String httpResponse = "HTTP/1.1 200 OK\r\n\r\n" + today;
-        clientSocket.getOutputStream().write(httpResponse.getBytes(StandardCharsets.UTF_8));
-        while(!line.isEmpty()) {
-            System.out.println(line);
-            line = reader.readLine();
+                Date today = new Date();
+                String httpResponse = "HTTP/1.1 200 OK\r\n\r\n" + today;
+                clientSocket.getOutputStream().write(httpResponse.getBytes(StandardCharsets.UTF_8));
+                while(!line.isEmpty()) {
+                    System.out.println(line);
+                    line = reader.readLine();
+                }
+            }
         }
     }
 }
